@@ -63,6 +63,7 @@ public class SQSQueueDAO implements QueueDAO {
         SendMessageRequest request =
                 new SendMessageRequest()
                         .withQueueUrl(getQueueUrl(queueName))
+                        .withMessageBody(id)
                         .withDelaySeconds((int) offsetTimeInSecond);
         sqsClient.sendMessage(request);
     }
