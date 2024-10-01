@@ -28,7 +28,9 @@ import org.springframework.context.annotation.Configuration;
 import com.netflix.conductor.core.config.ConductorProperties;
 import com.netflix.conductor.core.events.EventQueueProvider;
 import com.netflix.conductor.core.events.queue.ObservableQueue;
+import com.netflix.conductor.dao.QueueDAO;
 import com.netflix.conductor.model.TaskModel.Status;
+import com.netflix.conductor.sqs.dao.SQSQueueDAO;
 import com.netflix.conductor.sqs.eventqueue.SQSObservableQueue.Builder;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -70,6 +72,15 @@ public class SQSEventQueueConfiguration {
     public EventQueueProvider sqsEventQueueProvider(
             AmazonSQS sqsClient, SQSEventQueueProperties properties, Scheduler scheduler) {
         return new SQSEventQueueProvider(sqsClient, properties, scheduler);
+    }
+
+    @ConditionalOnProperty(
+            name = "conductor.queue.type",
+            havingValue = "sqs",
+            matchIfMissing = true)
+    @Bean
+    public QueueDAO sqsQueueDAO(AmazonSQS sqsClient) {
+        return new SQSQueueDAO(sqsClient);
     }
 
     @ConditionalOnProperty(
