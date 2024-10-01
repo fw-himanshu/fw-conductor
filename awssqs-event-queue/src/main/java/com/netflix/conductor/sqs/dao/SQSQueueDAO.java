@@ -63,7 +63,6 @@ public class SQSQueueDAO implements QueueDAO {
         SendMessageRequest request =
                 new SendMessageRequest()
                         .withQueueUrl(getQueueUrl(queueName))
-                        .withMessageDeduplicationId(id)
                         .withDelaySeconds((int) offsetTimeInSecond);
         sqsClient.sendMessage(request);
     }
@@ -81,7 +80,6 @@ public class SQSQueueDAO implements QueueDAO {
                     SendMessageRequest request =
                             new SendMessageRequest()
                                     .withQueueUrl(queueUrl)
-                                    .withMessageDeduplicationId(message.getId())
                                     .withMessageBody(message.getPayload());
                     sqsClient.sendMessage(request);
                 });
